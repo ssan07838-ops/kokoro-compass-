@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>こころのコンパス</title>
+<meta name="theme-color" content="#2f5d62">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f1e7; --card:#fffdf8; --ink:#2b2a27; --sub:#6b665c; --line:#e4dccb;
+  --main:#2f5d62; --main2:#5e8b7e; --accent:#d98e48; --soft:#eef3ef;
+  --E:#d98e48; --A:#c2667a; --C:#5e8b7e; --N:#8a74b5; --O:#4c86a8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:"Zen Maru Gothic","Hiragino Maru Gothic ProN","Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.7;-webkit-text-size-adjust:100%}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+h1,h2,h3{line-height:1.35;margin:0}
+button{font:inherit;color:inherit}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:14px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px 16px;font-size:17px;font-weight:700;background:var(--main);color:#fff;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--main);border:2px solid var(--main)}
+.btn:disabled{opacity:.4}
+.muted{color:var(--sub);font-size:14px}
+.small{font-size:13px;color:var(--sub)}
+.hidden{display:none!important}
+.hero{text-align:center;padding:18px 0 6px}
+.hero svg{width:92px;height:92px}
+.hero h1{font-size:30px;margin-top:8px;letter-spacing:.06em;color:var(--main)}
+.hero p{margin:6px 0 0;color:var(--sub)}
+.notice h2{font-size:17px;margin-bottom:8px}
+.notice ul{padding-left:1.2em;margin:0}
+.notice li{margin:4px 0}
+.top{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.back{border:0;background:none;color:var(--main);font-size:15px;padding:6px 4px;cursor:pointer;min-width:56px;text-align:left}
+.bar{flex:1;height:8px;background:var(--line);border-radius:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--main2);transition:width .3s}
+.count{font-size:13px;color:var(--sub);min-width:44px;text-align:right}
+.qnum{font-size:14px;color:var(--accent);font-weight:700}
+.stem{font-size:14px;color:var(--sub);margin-top:6px}
+.qtitle{font-size:22px;margin:2px 0 4px}
+.qhint{font-size:13px;color:var(--sub);margin-bottom:14px}
+.opts{display:grid;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:13px 16px;border:2px solid var(--line);border-radius:14px;background:#fff;font-size:16px;cursor:pointer;transition:border-color .15s,background .15s}
+.opt .em{font-size:20px;width:28px;text-align:center;flex:none}
+.opt .no{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--soft);color:var(--main);font-weight:700;flex:none;font-size:15px}
+.opt.on{border-color:var(--main);background:var(--soft)}
+.opt.quiet{font-size:14px;color:var(--sub);padding:10px 16px;justify-content:center}
+.next{margin-top:14px}
+.rtype{text-align:center;background:linear-gradient(160deg,#2f5d62,#5e8b7e);color:#fff;border:0}
+.rtype .lbl{font-size:13px;opacity:.85;letter-spacing:.1em}
+.rtype h2{font-size:24px;margin:6px 0 4px}
+.rtype p{text-align:left;margin:14px 0 0;font-size:15px}
+.sec h3{font-size:17px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+#result{counter-reset:sec}
+.sec{counter-increment:sec}
+.sec h3 .n::before{content:counter(sec)}
+.tip{border:2px solid var(--c);border-radius:16px;overflow:hidden;margin:14px 0;background:#fff}
+.tip-head{background:var(--c);color:#fff;padding:10px 14px}
+.tip-trait{font-size:12px;background:rgba(255,255,255,.25);border-radius:6px;padding:1px 8px}
+.tip-title{font-size:20px;font-weight:700;margin-top:2px}
+.tip-row,.tip-care{display:flex;gap:10px;padding:10px 14px;font-size:14px;border-top:1px solid var(--line)}
+.tip-care{background:#fdf1ef}
+.tip-ic{font-size:18px;flex:none;line-height:1.4}
+.tip-lbl{font-size:11px;color:var(--sub);font-weight:700;letter-spacing:.05em;margin-bottom:2px}
+.kw{display:inline-block;font-weight:700;font-size:15px;color:var(--c);border:1.5px solid var(--c);border-radius:999px;padding:1px 10px;margin:2px 4px 2px 0}
+.role{display:inline-block;font-size:14px;background:var(--soft);border-radius:8px;padding:2px 8px;margin:2px 4px 2px 0}
+strong.hl{font-weight:700;background:linear-gradient(transparent 55%,#ffe08a 55%)}
+.tip-care strong.hl{background:linear-gradient(transparent 55%,#f8c9c0 55%)}
+.ex{background:#faf6ee;border-radius:12px;padding:10px 14px;margin:6px 0 14px;font-size:14px}
+.ex b{display:block;font-size:12px;color:var(--accent);margin-bottom:2px}
+.ex ul{margin:0;padding-left:1.2em}
+.chara{display:flex;gap:12px;align-items:center;background:#fff;border:2px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:10px}
+.chara.best{border-color:var(--accent);background:#fff8f0}
+.chara .ic{font-size:30px;flex:none;width:40px;text-align:center}
+.chara .nm{font-weight:700;font-size:16px}
+.chara .wk{font-size:12px;color:var(--sub)}
+.chara .pct{margin-left:auto;font-weight:700;color:var(--accent);font-size:18px;flex:none}
+.tabs{display:flex;gap:6px;margin-bottom:4px}
+.tabbtn{flex:1;border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 4px;font-size:14px;font-weight:700;cursor:pointer;color:var(--sub)}
+.tabbtn.on{border-color:var(--accent);background:#fff8f0;color:#9a5a1f}
+.fun{display:inline-block;font-size:11px;background:#fbefe2;color:#9a5a1f;border-radius:6px;padding:1px 6px;margin-left:6px;vertical-align:middle}
+.sec h3 .n{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--main);color:#fff;font-size:13px;flex:none}
+.trait{margin:14px 0}
+.trait .row{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}
+.trait .row small{color:var(--sub);font-size:12px}
+.trait .track{position:relative;height:12px;background:#efe9dc;border-radius:8px;overflow:hidden;margin-top:4px}
+.trait .fill{height:100%;border-radius:8px;width:0;transition:width .9s ease}
+.trait .mid{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:#fff}
+.trait .why{font-size:13px;color:var(--ink);margin-top:4px}
+.scale{display:flex;justify-content:space-between;font-size:11px;color:var(--sub)}
+.ev{margin:0;padding:0;list-style:none}
+.ev li{padding:8px 0;border-bottom:1px dashed var(--line);font-size:14px}
+.ev li:last-child{border-bottom:0}
+.tag{display:inline-block;padding:4px 10px;margin:3px 4px 3px 0;border-radius:999px;background:var(--soft);color:var(--main);font-size:14px}
+.tag.warm{background:#fbefe2;color:#9a5a1f}
+.talk{margin:0;padding-left:1.2em}
+.talk li{margin:8px 0}
+.box{background:#faf6ee;border-radius:12px;padding:12px 14px;font-size:14px;margin-top:10px}
+.rate{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+.rate button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 2px;font-size:13px;cursor:pointer;line-height:1.3}
+.rate button b{display:block;font-size:20px}
+.rate button.on{border-color:var(--main);background:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips button{border:2px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer}
+.chips button.on{border-color:var(--main);background:var(--soft)}
+details summary{cursor:pointer;font-weight:700;color:var(--main)}
+.alist{margin:10px 0 0;padding:0;list-style:none;font-size:14px}
+.alist li{padding:6px 0;border-bottom:1px solid var(--line)}
+.alist b{display:block;font-weight:500;color:var(--sub);font-size:12px}
+.cite{font-size:12px;color:var(--sub);line-height:1.6}
+footer{font-size:12px;color:var(--sub);text-align:center;margin-top:20px}
+footer a{color:var(--main)}
+.help-btn{position:fixed;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:50;width:40px;height:40px;border-radius:50%;border:2px solid var(--main);background:var(--card);color:var(--main);font-size:20px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.modal{position:fixed;inset:0;z-index:60;background:rgba(30,30,25,.45);display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--card);width:100%;max-width:560px;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:20px 18px 28px;animation:up .25s ease}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.sheet h2{font-size:20px;color:var(--main);margin-bottom:8px}
+.sheet h3{font-size:16px;margin:18px 0 8px}
+.sheet .close{float:right;border:0;background:var(--soft);border-radius:50%;width:34px;height:34px;font-size:18px;cursor:pointer}
+.steps{margin:0;padding-left:1.3em;font-size:15px}
+.steps li{margin:4px 0}
+.qr{display:flex;justify-content:center;padding:12px;background:#fff;border-radius:14px;border:1px solid var(--line)}
+.qr svg{width:200px;height:200px}
+.share-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.share-row a,.share-row button{display:block;text-align:center;text-decoration:none;border-radius:12px;padding:12px 6px;font-size:15px;font-weight:700;cursor:pointer;border:0}
+.b-copy{background:var(--main);color:#fff}
+.b-line{background:#06c755;color:#fff}
+.b-share{grid-column:1/-1;background:transparent;color:var(--main);border:2px solid var(--main)!important}
+.url{user-select:all;-webkit-user-select:all;font-size:12px;color:var(--sub);word-break:break-all;text-align:center;margin-top:6px}
+.wrap{padding-top:56px}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<button class="help-btn" id="helpBtn" aria-label="アプリの説明と共有">？</button>
+<div class="modal hidden" id="helpModal" role="dialog" aria-modal="true">
+  <div class="sheet">
+    <button class="close" id="helpClose" aria-label="閉じる">✕</button>
+    <h2>こころのコンパスとは？</h2>
+    <p style="margin:0;font-size:15px">3分ほどの質問に答えるだけで、あなたの<strong>性格の傾向と強み</strong>が分かるテストです。心理学の研究で使われている質問をもとにしています。</p>
+    <h3>📱 使い方</h3>
+    <ol class="steps">
+      <li>「はじめる」を押して、質問に答える（全14問）</li>
+      <li>結果で、5つの性格の傾向と<strong>活かし方</strong>をチェック</li>
+      <li>おまけで、似ている<strong>アニメキャラ・歴史上の人物</strong>も！</li>
+    </ol>
+    <p class="small" style="margin-top:8px">回答はこの画面の中だけで使い、どこにも送信・保存しません。</p>
+    <h3>🤝 知り合いに教える</h3>
+    <p class="small" style="margin:0 0 8px">相手のスマホのカメラで、このQRコードを読み取ってもらってください。</p>
+    <div class="qr" id="qrBox"></div>
+    <div class="url" id="shareUrl"></div>
+    <div class="share-row">
+      <button class="b-copy" id="copyBtn">🔗 リンクをコピー</button>
+      <a class="b-line" id="lineBtn" target="_blank" rel="noopener">LINEで送る</a>
+      <button class="b-share hidden" id="nativeShare">ほかのアプリで送る</button>
+    </div>
+  </div>
+</div>
+<div class="wrap">
+
+<section id="intro" class="fade">
+  <div class="hero">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="44" fill="#fffdf8" stroke="#2f5d62" stroke-width="4"/>
+      <circle cx="50" cy="50" r="34" fill="none" stroke="#e4dccb" stroke-width="2"/>
+      <path d="M50 16 L58 50 L50 84 L42 50 Z" fill="#2f5d62"/>
+      <path d="M50 16 L58 50 L42 50 Z" fill="#d98e48"/>
+      <circle cx="50" cy="50" r="5" fill="#fffdf8" stroke="#2f5d62" stroke-width="2"/>
+    </svg>
+    <h1>こころのコンパス</h1>
+    <p>全14問・約3分の性格テスト<br><span style="font-size:14px">性格の活かし方＆似ているアニメキャラ・歴史上の人物も分かる！</span></p>
+  </div>
+
+  <div class="card notice">
+    <h2>はじめる前に</h2>
+    <ul>
+      <li><strong>目的：</strong>あなたの<strong>性格の傾向や強み</strong>を知ってもらうことです。結果についてお話しするかどうかは、自由です。</li>
+      <li>心理学の研究で<strong>実際に使われている質問</strong>で、あなたの性格を<strong>5つの面</strong>から見てみます。</li>
+      <li>3分ほどの簡単なテストなので、分かるのは<strong>ざっくりした傾向</strong>です（診断ではありません）。</li>
+      <li>「似ているアニメキャラ・歴史上の人物」は、お楽しみのおまけです。</li>
+      <li>回答は<strong>この画面の中だけ</strong>で使い、どこにも送信・保存しません。</li>
+      <li id="orgNote">このテストは、信仰を持つ人が個人で作ったものです。</li>
+    </ul>
+  </div>
+  <button class="btn" id="startBtn">わかりました、はじめる</button>
+</section>
+
+<section id="quiz" class="hidden">
+  <div class="top">
+    <button class="back" id="backBtn">‹ 戻る</button>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="count" id="count"></div>
+  </div>
+  <div class="card fade" id="qcard"></div>
+</section>
+
+<section id="result" class="hidden"></section>
+
+<footer>
+  こころのコンパス ・ 性格の大まかな傾向を知るための簡易ツール（診断ではありません）<br>
+  つらい気持ちが続くときは、身近な人や専門の相談窓口も頼ってください。<br>
+  <a href="https://www.mhlw.go.jp/mamorouyokokoro/" target="_blank" rel="noopener">厚生労働省「まもろうよ こころ」</a>
+</footer>
+</div>
+
+<script>
+/* QRCode for JavaScript (c) 2009 Kazuhiko Arase, MIT license — bundled from qrcode-terminal */
+var QRLite=(function(){var M={},C={};function R(n){n=n.replace('./','');if(C[n])return C[n].exports;var m={exports:{}};C[n]=m;M[n](m,m.exports,R);return m.exports;}
+M['QR8bitByte']=function(module,exports,require){
+var QRMode = require('./QRMode');
+
+function QR8bitByte(data) {
+	this.mode = QRMode.MODE_8BIT_BYTE;
+	this.data = data;
+}
+
+QR8bitByte.prototype = {
+
+	getLength : function() {
+		return this.data.length;
+	},
+	
+	write : function(buffer) {
+		for (var i = 0; i < this.data.length; i++) {
+			// not JIS ...
+			buffer.put(this.data.charCodeAt(i), 8);
+		}
+	}
+};
+
+module.exports = QR8bitByte;
+
+};
+M['QRBitBuffer']=function(module,exports,require){
+function QRBitBuffer() {
+	this.buffer = [];
+	this.length = 0;
+}
+
+QRBitBuffer.prototype = {
+
+	get : function(index) {
+		var bufIndex = Math.floor(index / 8);
+		return ( (this.buffer[bufIndex] >>> (7 - index % 8) ) & 1) == 1;
+	},
+	
+	put : function(num, length) {
+		for (var i = 0; i < length; i++) {
+			this.putBit( ( (num >>> (length - i - 1) ) & 1) == 1);
+		}
+	},
+	
+	getLengthInBits : function() {
+		return this.length;
+	},
+	
+	putBit : function(bit) {
+	
+		var bufIndex = Math.floor(this.length / 8);
+		if (this.buffer.length <= bufIndex) {
+			this.buffer.push(0);
+		}
+	
+		if (bit) {
+			this.buffer[bufIndex] |= (0x80 >>> (this.length % 8) );
+		}
+	
+		this.length++;
+	}
+};
+
+module.exports = QRBitBuffer;
+
+};
+M['QRErrorCorrectLevel']=function(module,exports,require){
+module.exports = {
+	L : 1,
+	M : 0,
+	Q : 3,
+	H : 2
+};
+
+
+};
+M['QRMaskPattern']=function(module,exports,require){
+module.exports = {
+	PATTERN000 : 0,
+	PATTERN001 : 1,
+	PATTERN010 : 2,
+	PATTERN011 : 3,
+	PATTERN100 : 4,
+	PATTERN101 : 5,
+	PATTERN110 : 6,
+	PATTERN111 : 7
+};
+
+};
+M['QRMath']=function(module,exports,require){
+var QRMath = {
+
+	glog : function(n) {
+	
+		if (n < 1) {
+			throw new Error("glog(" + n + ")");
+		}
+		
+		return QRMath.LOG_TABLE[n];
+	},
+	
+	gexp : function(n) {
+	
+		while (n < 0) {
+			n += 255;
+		}
+	
+		while (n >= 256) {
+			n -= 255;
+		}
+	
+		return QRMath.EXP_TABLE[n];
+	},
+	
+	EXP_TABLE : new Array(256),
+	
+	LOG_TABLE : new Array(256)
+
+};
+	
+for (var i = 0; i < 8; i++) {
+	QRMath.EXP_TABLE[i] = 1 << i;
+}
+for (var i = 8; i < 256; i++) {
+	QRMath.EXP_TABLE[i] = QRMath.EXP_TABLE[i - 4]
+		^ QRMath.EXP_TABLE[i - 5]
+		^ QRMath.EXP_TABLE[i - 6]
+		^ QRMath.EXP_TABLE[i - 8];
+}
+for (var i = 0; i < 255; i++) {
+	QRMath.LOG_TABLE[QRMath.EXP_TABLE[i] ] = i;
+}
+
+module.exports = QRMath;
+
+};
+M['QRMode']=function(module,exports,require){
+module.exports = {
+    MODE_NUMBER :       1 << 0,
+    MODE_ALPHA_NUM :    1 << 1,
+    MODE_8BIT_BYTE :    1 << 2,
+    MODE_KANJI :        1 << 3
+};
+
+};
+M['QRPolynomial']=function(module,exports,require){
+var QRMath = require('./QRMath');
+
+function QRPolynomial(num, shift) {
+	if (num.length === undefined) {
+		throw new Error(num.length + "/" + shift);
+	}
+
+	var offset = 0;
+
+	while (offset < num.length && num[offset] === 0) {
+		offset++;
+	}
+
+	this.num = new Array(num.length - offset + shift);
+	for (var i = 0; i < num.length - offset; i++) {
+		this.num[i] = num[i + offset];
+	}
+}
+
+QRPolynomial.prototype = {
+
+	get : function(index) {
+		return this.num[index];
+	},
+	
+	getLength : function() {
+		return this.num.length;
+	},
+	
+	multiply : function(e) {
+	
+		var num = new Array(this.getLength() + e.getLength() - 1);
+	
+		for (var i = 0; i < this.getLength(); i++) {
+			for (var j = 0; j < e.getLength(); j++) {
+				num[i + j] ^= QRMath.gexp(QRMath.glog(this.get(i) ) + QRMath.glog(e.get(j) ) );
+			}
+		}
+	
+		return new QRPolynomial(num, 0);
+	},
+	
+	mod : function(e) {
+	
+		if (this.getLength() - e.getLength() < 0) {
+			return this;
+		}
+	
+		var ratio = QRMath.glog(this.get(0) ) - QRMath.glog(e.get(0) );
+	
+		var num = new Array(this.getLength() );
+		
+		for (var i = 0; i < this.getLength(); i++) {
+			num[i] = this.get(i);
+		}
+		
+		for (var x = 0; x < e.getLength(); x++) {
+			num[x] ^= QRMath.gexp(QRMath.glog(e.get(x) ) + ratio);
+		}
+	
+		// recursive call
+		return new QRPolynomial(num, 0).mod(e);
+	}
+};
+
+module.exports = QRPolynomial;
+
+};
+M['QRRSBlock']=function(module,exports,require){
+var QRErrorCorrectLevel = require('./QRErrorCorrectLevel');
+
+function QRRSBlock(totalCount, dataCount) {
+	this.totalCount = totalCount;
+	this.dataCount  = dataCount;
+}
+
+QRRSBlock.RS_BLOCK_TABLE = [
+
+	// L
+	// M
+	// Q
+	// H
+
+	// 1
+	[1, 26, 19],
+	[1, 26, 16],
+	[1, 26, 13],
+	[1, 26, 9],
+	
+	// 2
+	[1, 44, 34],
+	[1, 44, 28],
+	[1, 44, 22],
+	[1, 44, 16],
+
+	// 3
+	[1, 70, 55],
+	[1, 70, 44],
+	[2, 35, 17],
+	[2, 35, 13],
+
+	// 4		
+	[1, 100, 80],
+	[2, 50, 32],
+	[2, 50, 24],
+	[4, 25, 9],
+	
+	// 5
+	[1, 134, 108],
+	[2, 67, 43],
+	[2, 33, 15, 2, 34, 16],
+	[2, 33, 11, 2, 34, 12],
+	
+	// 6
+	[2, 86, 68],
+	[4, 43, 27],
+	[4, 43, 19],
+	[4, 43, 15],
+	
+	// 7		
+	[2, 98, 78],
+	[4, 49, 31],
+	[2, 32, 14, 4, 33, 15],
+	[4, 39, 13, 1, 40, 14],
+	
+	// 8
+	[2, 121, 97],
+	[2, 60, 38, 2, 61, 39],
+	[4, 40, 18, 2, 41, 19],
+	[4, 40, 14, 2, 41, 15],
+	
+	// 9
+	[2, 146, 116],
+	[3, 58, 36, 2, 59, 37],
+	[4, 36, 16, 4, 37, 17],
+	[4, 36, 12, 4, 37, 13],
+	
+	// 10		
+	[2, 86, 68, 2, 87, 69],
+	[4, 69, 43, 1, 70, 44],
+	[6, 43, 19, 2, 44, 20],
+	[6, 43, 15, 2, 44, 16],
+
+	// 11
+	[4, 101, 81],
+	[1, 80, 50, 4, 81, 51],
+	[4, 50, 22, 4, 51, 23],
+	[3, 36, 12, 8, 37, 13],
+
+	// 12
+	[2, 116, 92, 2, 117, 93],
+	[6, 58, 36, 2, 59, 37],
+	[4, 46, 20, 6, 47, 21],
+	[7, 42, 14, 4, 43, 15],
+
+	// 13
+	[4, 133, 107],
+	[8, 59, 37, 1, 60, 38],
+	[8, 44, 20, 4, 45, 21],
+	[12, 33, 11, 4, 34, 12],
+
+	// 14
+	[3, 145, 115, 1, 146, 116],
+	[4, 64, 40, 5, 65, 41],
+	[11, 36, 16, 5, 37, 17],
+	[11, 36, 12, 5, 37, 13],
+
+	// 15
+	[5, 109, 87, 1, 110, 88],
+	[5, 65, 41, 5, 66, 42],
+	[5, 54, 24, 7, 55, 25],
+	[11, 36, 12],
+
+	// 16
+	[5, 122, 98, 1, 123, 99],
+	[7, 73, 45, 3, 74, 46],
+	[15, 43, 19, 2, 44, 20],
+	[3, 45, 15, 13, 46, 16],
+
+	// 17
+	[1, 135, 107, 5, 136, 108],
+	[10, 74, 46, 1, 75, 47],
+	[1, 50, 22, 15, 51, 23],
+	[2, 42, 14, 17, 43, 15],
+
+	// 18
+	[5, 150, 120, 1, 151, 121],
+	[9, 69, 43, 4, 70, 44],
+	[17, 50, 22, 1, 51, 23],
+	[2, 42, 14, 19, 43, 15],
+
+	// 19
+	[3, 141, 113, 4, 142, 114],
+	[3, 70, 44, 11, 71, 45],
+	[17, 47, 21, 4, 48, 22],
+	[9, 39, 13, 16, 40, 14],
+
+	// 20
+	[3, 135, 107, 5, 136, 108],
+	[3, 67, 41, 13, 68, 42],
+	[15, 54, 24, 5, 55, 25],
+	[15, 43, 15, 10, 44, 16],
+
+	// 21
+	[4, 144, 116, 4, 145, 117],
+	[17, 68, 42],
+	[17, 50, 22, 6, 51, 23],
+	[19, 46, 16, 6, 47, 17],
+
+	// 22
+	[2, 139, 111, 7, 140, 112],
+	[17, 74, 46],
+	[7, 54, 24, 16, 55, 25],
+	[34, 37, 13],
+
+	// 23
+	[4, 151, 121, 5, 152, 122],
+	[4, 75, 47, 14, 76, 48],
+	[11, 54, 24, 14, 55, 25],
+	[16, 45, 15, 14, 46, 16],
+
+	// 24
+	[6, 147, 117, 4, 148, 118],
+	[6, 73, 45, 14, 74, 46],
+	[11, 54, 24, 16, 55, 25],
+	[30, 46, 16, 2, 47, 17],
+
+	// 25
+	[8, 132, 106, 4, 133, 107],
+	[8, 75, 47, 13, 76, 48],
+	[7, 54, 24, 22, 55, 25],
+	[22, 45, 15, 13, 46, 16],
+
+	// 26
+	[10, 142, 114, 2, 143, 115],
+	[19, 74, 46, 4, 75, 47],
+	[28, 50, 22, 6, 51, 23],
+	[33, 46, 16, 4, 47, 17],
+
+	// 27
+	[8, 152, 122, 4, 153, 123],
+	[22, 73, 45, 3, 74, 46],
+	[8, 53, 23, 26, 54, 24],
+	[12, 45, 15, 28, 46, 16],
+
+	// 28
+	[3, 147, 117, 10, 148, 118],
+	[3, 73, 45, 23, 74, 46],
+	[4, 54, 24, 31, 55, 25],
+	[11, 45, 15, 31, 46, 16],
+
+	// 29
+	[7, 146, 116, 7, 147, 117],
+	[21, 73, 45, 7, 74, 46],
+	[1, 53, 23, 37, 54, 24],
+	[19, 45, 15, 26, 46, 16],
+
+	// 30
+	[5, 145, 115, 10, 146, 116],
+	[19, 75, 47, 10, 76, 48],
+	[15, 54, 24, 25, 55, 25],
+	[23, 45, 15, 25, 46, 16],
+
+	// 31
+	[13, 145, 115, 3, 146, 116],
+	[2, 74, 46, 29, 75, 47],
+	[42, 54, 24, 1, 55, 25],
+	[23, 45, 15, 28, 46, 16],
+
+	// 32
+	[17, 145, 115],
+	[10, 74, 46, 23, 75, 47],
+	[10, 54, 24, 35, 55, 25],
+	[19, 45, 15, 35, 46, 16],
+
+	// 33
+	[17, 145, 115, 1, 146, 116],
+	[14, 74, 46, 21, 75, 47],
+	[29, 54, 24, 19, 55, 25],
+	[11, 45, 15, 46, 46, 16],
+
+	// 34
+	[13, 145, 115, 6, 146, 116],
+	[14, 74, 46, 23, 75, 47],
+	[44, 54, 24, 7, 55, 25],
+	[59, 46, 16, 1, 47, 17],
+
+	// 35
+	[12, 151, 121, 7, 152, 122],
+	[12, 75, 47, 26, 76, 48],
+	[39, 54, 24, 14, 55, 25],
+	[22, 45, 15, 41, 46, 16],
+
+	// 36
+	[6, 151, 121, 14, 152, 122],
+	[6, 75, 47, 34, 76, 48],
+	[46, 54, 24, 10, 55, 25],
+	[2, 45, 15, 64, 46, 16],
+
+	// 37
+	[17, 152, 122, 4, 153, 123],
+	[29, 74, 46, 14, 75, 47],
+	[49, 54, 24, 10, 55, 25],
+	[24, 45, 15, 46, 46, 16],
+
+	// 38
+	[4, 152, 122, 18, 153, 123],
+	[13, 74, 46, 32, 75, 47],
+	[48, 54, 24, 14, 55, 25],
+	[42, 45, 15, 32, 46, 16],
+
+	// 39
+	[20, 147, 117, 4, 148, 118],
+	[40, 75, 47, 7, 76, 48],
+	[43, 54, 24, 22, 55, 25],
+	[10, 45, 15, 67, 46, 16],
+
+	// 40
+	[19, 148, 118, 6, 149, 119],
+	[18, 75, 47, 31, 76, 48],
+	[34, 54, 24, 34, 55, 25],
+	[20, 45, 15, 61, 46, 16]
+];
+
+QRRSBlock.getRSBlocks = function(typeNumber, errorCorrectLevel) {
+	
+	var rsBlock = QRRSBlock.getRsBlockTable(typeNumber, errorCorrectLevel);
+	
+	if (rsBlock === undefined) {
+		throw new Error("bad rs block @ typeNumber:" + typeNumber + "/errorCorrectLevel:" + errorCorrectLevel);
+	}
+
+	var length = rsBlock.length / 3;
+	
+	var list = [];
+	
+	for (var i = 0; i < length; i++) {
+
+		var count = rsBlock[i * 3 + 0];
+		var totalCount = rsBlock[i * 3 + 1];
+		var dataCount  = rsBlock[i * 3 + 2];
+
+		for (var j = 0; j < count; j++) {
+			list.push(new QRRSBlock(totalCount, dataCount) );	
+		}
+	}
+	
+	return list;
+};
+
+QRRSBlock.getRsBlockTable = function(typeNumber, errorCorrectLevel) {
+
+	switch(errorCorrectLevel) {
+	case QRErrorCorrectLevel.L :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 0];
+	case QRErrorCorrectLevel.M :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 1];
+	case QRErrorCorrectLevel.Q :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 2];
+	case QRErrorCorrectLevel.H :
+		return QRRSBlock.RS_BLOCK_TABLE[(typeNumber - 1) * 4 + 3];
+	default :
+		return undefined;
+	}
+};
+
+module.exports = QRRSBlock;
+
+};
+M['QRUtil']=function(module,exports,require){
+var QRMode = require('./QRMode');
+var QRPolynomial = require('./QRPolynomial');
+var QRMath = require('./QRMath');
+var QRMaskPattern = require('./QRMaskPattern');
+
+var QRUtil = {
+
+    PATTERN_POSITION_TABLE : [
+        [],
+        [6, 18],
+        [6, 22],
+        [6, 26],
+        [6, 30],
+        [6, 34],
+        [6, 22, 38],
+        [6, 24, 42],
+        [6, 26, 46],
+        [6, 28, 50],
+        [6, 30, 54],        
+        [6, 32, 58],
+        [6, 34, 62],
+        [6, 26, 46, 66],
+        [6, 26, 48, 70],
+        [6, 26, 50, 74],
+        [6, 30, 54, 78],
+        [6, 30, 56, 82],
+        [6, 30, 58, 86],
+        [6, 34, 62, 90],
+        [6, 28, 50, 72, 94],
+        [6, 26, 50, 74, 98],
+        [6, 30, 54, 78, 102],
+        [6, 28, 54, 80, 106],
+        [6, 32, 58, 84, 110],
+        [6, 30, 58, 86, 114],
+        [6, 34, 62, 90, 118],
+        [6, 26, 50, 74, 98, 122],
+        [6, 30, 54, 78, 102, 126],
+        [6, 26, 52, 78, 104, 130],
+        [6, 30, 56, 82, 108, 134],
+        [6, 34, 60, 86, 112, 138],
+        [6, 30, 58, 86, 114, 142],
+        [6, 34, 62, 90, 118, 146],
+        [6, 30, 54, 78, 102, 126, 150],
+        [6, 24, 50, 76, 102, 128, 154],
+        [6, 28, 54, 80, 106, 132, 158],
+        [6, 32, 58, 84, 110, 136, 162],
+        [6, 26, 54, 82, 110, 138, 166],
+        [6, 30, 58, 86, 114, 142, 170]
+    ],
+
+    G15 : (1 << 10) | (1 << 8) | (1 << 5) | (1 << 4) | (1 << 2) | (1 << 1) | (1 << 0),
+    G18 : (1 << 12) | (1 << 11) | (1 << 10) | (1 << 9) | (1 << 8) | (1 << 5) | (1 << 2) | (1 << 0),
+    G15_MASK : (1 << 14) | (1 << 12) | (1 << 10)    | (1 << 4) | (1 << 1),
+
+    getBCHTypeInfo : function(data) {
+        var d = data << 10;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) >= 0) {
+            d ^= (QRUtil.G15 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G15) ) );    
+        }
+        return ( (data << 10) | d) ^ QRUtil.G15_MASK;
+    },
+
+    getBCHTypeNumber : function(data) {
+        var d = data << 12;
+        while (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) >= 0) {
+            d ^= (QRUtil.G18 << (QRUtil.getBCHDigit(d) - QRUtil.getBCHDigit(QRUtil.G18) ) );    
+        }
+        return (data << 12) | d;
+    },
+
+    getBCHDigit : function(data) {
+
+        var digit = 0;
+
+        while (data !== 0) {
+            digit++;
+            data >>>= 1;
+        }
+
+        return digit;
+    },
+
+    getPatternPosition : function(typeNumber) {
+        return QRUtil.PATTERN_POSITION_TABLE[typeNumber - 1];
+    },
+
+    getMask : function(maskPattern, i, j) {
+        
+        switch (maskPattern) {
+            
+        case QRMaskPattern.PATTERN000 : return (i + j) % 2 === 0;
+        case QRMaskPattern.PATTERN001 : return i % 2 === 0;
+        case QRMaskPattern.PATTERN010 : return j % 3 === 0;
+        case QRMaskPattern.PATTERN011 : return (i + j) % 3 === 0;
+        case QRMaskPattern.PATTERN100 : return (Math.floor(i / 2) + Math.floor(j / 3) ) % 2 === 0;
+        case QRMaskPattern.PATTERN101 : return (i * j) % 2 + (i * j) % 3 === 0;
+        case QRMaskPattern.PATTERN110 : return ( (i * j) % 2 + (i * j) % 3) % 2 === 0;
+        case QRMaskPattern.PATTERN111 : return ( (i * j) % 3 + (i + j) % 2) % 2 === 0;
+
+        default :
+            throw new Error("bad maskPattern:" + maskPattern);
+        }
+    },
+
+    getErrorCorrectPolynomial : function(errorCorrectLength) {
+
+        var a = new QRPolynomial([1], 0);
+
+        for (var i = 0; i < errorCorrectLength; i++) {
+            a = a.multiply(new QRPolynomial([1, QRMath.gexp(i)], 0) );
+        }
+
+        return a;
+    },
+
+    getLengthInBits : function(mode, type) {
+
+        if (1 <= type && type < 10) {
+
+            // 1 - 9
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 10;
+            case QRMode.MODE_ALPHA_NUM  : return 9;
+            case QRMode.MODE_8BIT_BYTE  : return 8;
+            case QRMode.MODE_KANJI      : return 8;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 27) {
+
+            // 10 - 26
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 12;
+            case QRMode.MODE_ALPHA_NUM  : return 11;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 10;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else if (type < 41) {
+
+            // 27 - 40
+
+            switch(mode) {
+            case QRMode.MODE_NUMBER     : return 14;
+            case QRMode.MODE_ALPHA_NUM  : return 13;
+            case QRMode.MODE_8BIT_BYTE  : return 16;
+            case QRMode.MODE_KANJI      : return 12;
+            default :
+                throw new Error("mode:" + mode);
+            }
+
+        } else {
+            throw new Error("type:" + type);
+        }
+    },
+
+    getLostPoint : function(qrCode) {
+        
+        var moduleCount = qrCode.getModuleCount();
+        var lostPoint = 0;
+        var row = 0; 
+        var col = 0;
+
+        
+        // LEVEL1
+        
+        for (row = 0; row < moduleCount; row++) {
+
+            for (col = 0; col < moduleCount; col++) {
+
+                var sameCount = 0;
+                var dark = qrCode.isDark(row, col);
+
+                for (var r = -1; r <= 1; r++) {
+
+                    if (row + r < 0 || moduleCount <= row + r) {
+                        continue;
+                    }
+
+                    for (var c = -1; c <= 1; c++) {
+
+                        if (col + c < 0 || moduleCount <= col + c) {
+                            continue;
+                        }
+
+                        if (r === 0 && c === 0) {
+                            continue;
+                        }
+
+                        if (dark === qrCode.isDark(row + r, col + c) ) {
+                            sameCount++;
+                        }
+                    }
+                }
+
+                if (sameCount > 5) {
+                    lostPoint += (3 + sameCount - 5);
+                }
+            }
+        }
+
+        // LEVEL2
+
+        for (row = 0; row < moduleCount - 1; row++) {
+            for (col = 0; col < moduleCount - 1; col++) {
+                var count = 0;
+                if (qrCode.isDark(row,     col    ) ) count++;
+                if (qrCode.isDark(row + 1, col    ) ) count++;
+                if (qrCode.isDark(row,     col + 1) ) count++;
+                if (qrCode.isDark(row + 1, col + 1) ) count++;
+                if (count === 0 || count === 4) {
+                    lostPoint += 3;
+                }
+            }
+        }
+
+        // LEVEL3
+
+        for (row = 0; row < moduleCount; row++) {
+            for (col = 0; col < moduleCount - 6; col++) {
+                if (qrCode.isDark(row, col) && 
+                        !qrCode.isDark(row, col + 1) && 
+                         qrCode.isDark(row, col + 2) && 
+                         qrCode.isDark(row, col + 3) && 
+                         qrCode.isDark(row, col + 4) && 
+                        !qrCode.isDark(row, col + 5) && 
+                         qrCode.isDark(row, col + 6) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount - 6; row++) {
+                if (qrCode.isDark(row, col) &&
+                        !qrCode.isDark(row + 1, col) &&
+                         qrCode.isDark(row + 2, col) &&
+                         qrCode.isDark(row + 3, col) &&
+                         qrCode.isDark(row + 4, col) &&
+                        !qrCode.isDark(row + 5, col) &&
+                         qrCode.isDark(row + 6, col) ) {
+                    lostPoint += 40;
+                }
+            }
+        }
+
+        // LEVEL4
+        
+        var darkCount = 0;
+
+        for (col = 0; col < moduleCount; col++) {
+            for (row = 0; row < moduleCount; row++) {
+                if (qrCode.isDark(row, col) ) {
+                    darkCount++;
+                }
+            }
+        }
+        
+        var ratio = Math.abs(100 * darkCount / moduleCount / moduleCount - 50) / 5;
+        lostPoint += ratio * 10;
+
+        return lostPoint;       
+    }
+
+};
+
+module.exports = QRUtil;
+
+};
+M['index']=function(module,exports,require){
+//---------------------------------------------------------------------
+// QRCode for JavaScript
+//
+// Copyright (c) 2009 Kazuhiko Arase
+//
+// URL: http://www.d-project.com/
+//
+// Licensed under the MIT license:
+//   http://www.opensource.org/licenses/mit-license.php
+//
+// The word "QR Code" is registered trademark of 
+// DENSO WAVE INCORPORATED
+//   http://www.denso-wave.com/qrcode/faqpatent-e.html
+//
+//---------------------------------------------------------------------
+// Modified to work in node for this project (and some refactoring)
+//---------------------------------------------------------------------
+
+var QR8bitByte = require('./QR8bitByte');
+var QRUtil = require('./QRUtil');
+var QRPolynomial = require('./QRPolynomial');
+var QRRSBlock = require('./QRRSBlock');
+var QRBitBuffer = require('./QRBitBuffer');
+
+function QRCode(typeNumber, errorCorrectLevel) {
+	this.typeNumber = typeNumber;
+	this.errorCorrectLevel = errorCorrectLevel;
+	this.modules = null;
+	this.moduleCount = 0;
+	this.dataCache = null;
+	this.dataList = [];
+}
+
+QRCode.prototype = {
+	
+	addData : function(data) {
+		var newData = new QR8bitByte(data);
+		this.dataList.push(newData);
+		this.dataCache = null;
+	},
+	
+	isDark : function(row, col) {
+		if (row < 0 || this.moduleCount <= row || col < 0 || this.moduleCount <= col) {
+			throw new Error(row + "," + col);
+		}
+		return this.modules[row][col];
+	},
+
+	getModuleCount : function() {
+		return this.moduleCount;
+	},
+	
+	make : function() {
+		// Calculate automatically typeNumber if provided is < 1
+		if (this.typeNumber < 1 ){
+			var typeNumber = 1;
+			for (typeNumber = 1; typeNumber < 40; typeNumber++) {
+				var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, this.errorCorrectLevel);
+
+				var buffer = new QRBitBuffer();
+				var totalDataCount = 0;
+				for (var i = 0; i < rsBlocks.length; i++) {
+					totalDataCount += rsBlocks[i].dataCount;
+				}
+
+				for (var x = 0; x < this.dataList.length; x++) {
+					var data = this.dataList[x];
+					buffer.put(data.mode, 4);
+					buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+					data.write(buffer);
+				}
+				if (buffer.getLengthInBits() <= totalDataCount * 8)
+					break;
+			}
+			this.typeNumber = typeNumber;
+		}
+		this.makeImpl(false, this.getBestMaskPattern() );
+	},
+	
+	makeImpl : function(test, maskPattern) {
+		
+		this.moduleCount = this.typeNumber * 4 + 17;
+		this.modules = new Array(this.moduleCount);
+		
+		for (var row = 0; row < this.moduleCount; row++) {
+			
+			this.modules[row] = new Array(this.moduleCount);
+			
+			for (var col = 0; col < this.moduleCount; col++) {
+				this.modules[row][col] = null;//(col + row) % 3;
+			}
+		}
+	
+		this.setupPositionProbePattern(0, 0);
+		this.setupPositionProbePattern(this.moduleCount - 7, 0);
+		this.setupPositionProbePattern(0, this.moduleCount - 7);
+		this.setupPositionAdjustPattern();
+		this.setupTimingPattern();
+		this.setupTypeInfo(test, maskPattern);
+		
+		if (this.typeNumber >= 7) {
+			this.setupTypeNumber(test);
+		}
+	
+		if (this.dataCache === null) {
+			this.dataCache = QRCode.createData(this.typeNumber, this.errorCorrectLevel, this.dataList);
+		}
+	
+		this.mapData(this.dataCache, maskPattern);
+	},
+
+	setupPositionProbePattern : function(row, col)  {
+		
+		for (var r = -1; r <= 7; r++) {
+			
+			if (row + r <= -1 || this.moduleCount <= row + r) continue;
+			
+			for (var c = -1; c <= 7; c++) {
+				
+				if (col + c <= -1 || this.moduleCount <= col + c) continue;
+				
+				if ( (0 <= r && r <= 6 && (c === 0 || c === 6) ) || 
+                     (0 <= c && c <= 6 && (r === 0 || r === 6) ) || 
+                     (2 <= r && r <= 4 && 2 <= c && c <= 4) ) {
+					this.modules[row + r][col + c] = true;
+				} else {
+					this.modules[row + r][col + c] = false;
+				}
+			}		
+		}		
+	},
+	
+	getBestMaskPattern : function() {
+	
+		var minLostPoint = 0;
+		var pattern = 0;
+	
+		for (var i = 0; i < 8; i++) {
+			
+			this.makeImpl(true, i);
+	
+			var lostPoint = QRUtil.getLostPoint(this);
+	
+			if (i === 0 || minLostPoint >  lostPoint) {
+				minLostPoint = lostPoint;
+				pattern = i;
+			}
+		}
+	
+		return pattern;
+	},
+	
+	createMovieClip : function(target_mc, instance_name, depth) {
+	
+		var qr_mc = target_mc.createEmptyMovieClip(instance_name, depth);
+		var cs = 1;
+	
+		this.make();
+
+		for (var row = 0; row < this.modules.length; row++) {
+			
+			var y = row * cs;
+			
+			for (var col = 0; col < this.modules[row].length; col++) {
+	
+				var x = col * cs;
+				var dark = this.modules[row][col];
+			
+				if (dark) {
+					qr_mc.beginFill(0, 100);
+					qr_mc.moveTo(x, y);
+					qr_mc.lineTo(x + cs, y);
+					qr_mc.lineTo(x + cs, y + cs);
+					qr_mc.lineTo(x, y + cs);
+					qr_mc.endFill();
+				}
+			}
+		}
+		
+		return qr_mc;
+	},
+
+	setupTimingPattern : function() {
+		
+		for (var r = 8; r < this.moduleCount - 8; r++) {
+			if (this.modules[r][6] !== null) {
+				continue;
+			}
+			this.modules[r][6] = (r % 2 === 0);
+		}
+	
+		for (var c = 8; c < this.moduleCount - 8; c++) {
+			if (this.modules[6][c] !== null) {
+				continue;
+			}
+			this.modules[6][c] = (c % 2 === 0);
+		}
+	},
+	
+	setupPositionAdjustPattern : function() {
+	
+		var pos = QRUtil.getPatternPosition(this.typeNumber);
+		
+		for (var i = 0; i < pos.length; i++) {
+		
+			for (var j = 0; j < pos.length; j++) {
+			
+				var row = pos[i];
+				var col = pos[j];
+				
+				if (this.modules[row][col] !== null) {
+					continue;
+				}
+				
+				for (var r = -2; r <= 2; r++) {
+				
+					for (var c = -2; c <= 2; c++) {
+					
+						if (Math.abs(r) === 2 || 
+                            Math.abs(c) === 2 ||
+                            (r === 0 && c === 0) ) {
+							this.modules[row + r][col + c] = true;
+						} else {
+							this.modules[row + r][col + c] = false;
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	setupTypeNumber : function(test) {
+	
+		var bits = QRUtil.getBCHTypeNumber(this.typeNumber);
+        var mod;
+	
+		for (var i = 0; i < 18; i++) {
+			mod = (!test && ( (bits >> i) & 1) === 1);
+			this.modules[Math.floor(i / 3)][i % 3 + this.moduleCount - 8 - 3] = mod;
+		}
+	
+		for (var x = 0; x < 18; x++) {
+			mod = (!test && ( (bits >> x) & 1) === 1);
+			this.modules[x % 3 + this.moduleCount - 8 - 3][Math.floor(x / 3)] = mod;
+		}
+	},
+	
+	setupTypeInfo : function(test, maskPattern) {
+	
+		var data = (this.errorCorrectLevel << 3) | maskPattern;
+		var bits = QRUtil.getBCHTypeInfo(data);
+        var mod;
+	
+		// vertical		
+		for (var v = 0; v < 15; v++) {
+	
+			mod = (!test && ( (bits >> v) & 1) === 1);
+	
+			if (v < 6) {
+				this.modules[v][8] = mod;
+			} else if (v < 8) {
+				this.modules[v + 1][8] = mod;
+			} else {
+				this.modules[this.moduleCount - 15 + v][8] = mod;
+			}
+		}
+	
+		// horizontal
+		for (var h = 0; h < 15; h++) {
+	
+			mod = (!test && ( (bits >> h) & 1) === 1);
+			
+			if (h < 8) {
+				this.modules[8][this.moduleCount - h - 1] = mod;
+			} else if (h < 9) {
+				this.modules[8][15 - h - 1 + 1] = mod;
+			} else {
+				this.modules[8][15 - h - 1] = mod;
+			}
+		}
+	
+		// fixed module
+		this.modules[this.moduleCount - 8][8] = (!test);
+	
+	},
+	
+	mapData : function(data, maskPattern) {
+		
+		var inc = -1;
+		var row = this.moduleCount - 1;
+		var bitIndex = 7;
+		var byteIndex = 0;
+		
+		for (var col = this.moduleCount - 1; col > 0; col -= 2) {
+	
+			if (col === 6) col--;
+	
+			while (true) {
+	
+				for (var c = 0; c < 2; c++) {
+					
+					if (this.modules[row][col - c] === null) {
+						
+						var dark = false;
+	
+						if (byteIndex < data.length) {
+							dark = ( ( (data[byteIndex] >>> bitIndex) & 1) === 1);
+						}
+	
+						var mask = QRUtil.getMask(maskPattern, row, col - c);
+	
+						if (mask) {
+							dark = !dark;
+						}
+						
+						this.modules[row][col - c] = dark;
+						bitIndex--;
+	
+						if (bitIndex === -1) {
+							byteIndex++;
+							bitIndex = 7;
+						}
+					}
+				}
+								
+				row += inc;
+	
+				if (row < 0 || this.moduleCount <= row) {
+					row -= inc;
+					inc = -inc;
+					break;
+				}
+			}
+		}
+		
+	}
+
+};
+
+QRCode.PAD0 = 0xEC;
+QRCode.PAD1 = 0x11;
+
+QRCode.createData = function(typeNumber, errorCorrectLevel, dataList) {
+	
+	var rsBlocks = QRRSBlock.getRSBlocks(typeNumber, errorCorrectLevel);
+	
+	var buffer = new QRBitBuffer();
+	
+	for (var i = 0; i < dataList.length; i++) {
+		var data = dataList[i];
+		buffer.put(data.mode, 4);
+		buffer.put(data.getLength(), QRUtil.getLengthInBits(data.mode, typeNumber) );
+		data.write(buffer);
+	}
+
+	// calc num max data.
+	var totalDataCount = 0;
+	for (var x = 0; x < rsBlocks.length; x++) {
+		totalDataCount += rsBlocks[x].dataCount;
+	}
+
+	if (buffer.getLengthInBits() > totalDataCount * 8) {
+		throw new Error("code length overflow. (" + 
+            buffer.getLengthInBits() + 
+            ">" +  
+            totalDataCount * 8 + 
+            ")");
+	}
+
+	// end code
+	if (buffer.getLengthInBits() + 4 <= totalDataCount * 8) {
+		buffer.put(0, 4);
+	}
+
+	// padding
+	while (buffer.getLengthInBits() % 8 !== 0) {
+		buffer.putBit(false);
+	}
+
+	// padding
+	while (true) {
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD0, 8);
+		
+		if (buffer.getLengthInBits() >= totalDataCount * 8) {
+			break;
+		}
+		buffer.put(QRCode.PAD1, 8);
+	}
+
+	return QRCode.createBytes(buffer, rsBlocks);
+};
+
+QRCode.createBytes = function(buffer, rsBlocks) {
+
+	var offset = 0;
+	
+	var maxDcCount = 0;
+	var maxEcCount = 0;
+	
+	var dcdata = new Array(rsBlocks.length);
+	var ecdata = new Array(rsBlocks.length);
+	
+	for (var r = 0; r < rsBlocks.length; r++) {
+
+		var dcCount = rsBlocks[r].dataCount;
+		var ecCount = rsBlocks[r].totalCount - dcCount;
+
+		maxDcCount = Math.max(maxDcCount, dcCount);
+		maxEcCount = Math.max(maxEcCount, ecCount);
+		
+		dcdata[r] = new Array(dcCount);
+		
+		for (var i = 0; i < dcdata[r].length; i++) {
+			dcdata[r][i] = 0xff & buffer.buffer[i + offset];
+		}
+		offset += dcCount;
+		
+		var rsPoly = QRUtil.getErrorCorrectPolynomial(ecCount);
+		var rawPoly = new QRPolynomial(dcdata[r], rsPoly.getLength() - 1);
+
+		var modPoly = rawPoly.mod(rsPoly);
+		ecdata[r] = new Array(rsPoly.getLength() - 1);
+		for (var x = 0; x < ecdata[r].length; x++) {
+            var modIndex = x + modPoly.getLength() - ecdata[r].length;
+			ecdata[r][x] = (modIndex >= 0)? modPoly.get(modIndex) : 0;
+		}
+
+	}
+	
+	var totalCodeCount = 0;
+	for (var y = 0; y < rsBlocks.length; y++) {
+		totalCodeCount += rsBlocks[y].totalCount;
+	}
+
+	var data = new Array(totalCodeCount);
+	var index = 0;
+
+	for (var z = 0; z < maxDcCount; z++) {
+		for (var s = 0; s < rsBlocks.length; s++) {
+			if (z < dcdata[s].length) {
+				data[index++] = dcdata[s][z];
+			}
+		}
+	}
+
+	for (var xx = 0; xx < maxEcCount; xx++) {
+		for (var t = 0; t < rsBlocks.length; t++) {
+			if (xx < ecdata[t].length) {
+				data[index++] = ecdata[t][xx];
+			}
+		}
+	}
+
+	return data;
+
+};
+
+module.exports = QRCode;
+
+};
+var QRCode=R('index'),L=R('QRErrorCorrectLevel');
+return function(text){var q=new QRCode(-1,L.M);q.addData(text);q.make();var n=q.getModuleCount(),pad=4,sz=n+pad*2,p='';
+for(var r=0;r<n;r++)for(var c=0;c<n;c++)if(q.isDark(r,c))p+='M'+(c+pad)+' '+(r+pad)+'h1v1h-1z';
+return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+sz+' '+sz+'" shape-rendering="crispEdges" width="200" height="200"><rect width="100%" height="100%" fill="#fff"/><path d="'+p+'" fill="#000"/></svg>';};})();
+</script>
+<script>
+/* 団体の説明文を変えたい場合はここを書き換えてください（null のままなら既定文） */
+const ORG_NOTE = null;
+
+/* =========================================================
+   TIPI-J（小塩・阿部・カトローニ, 2012）
+   質問文・7件法・採点は原版どおり。改変しないでください。
+   ========================================================= */
+const TIPI_STEM = '私は自分自身のことを……';
+// 理解を助けるための日常の具体例（質問文そのものは原版のまま）
+const TIPI_EX = [
+  ['初対面の人にも自分から話しかける','休みの日は外に出かけたくなる'],
+  ['人のやり方にイライラしやすい','言い合いやケンカになることがよくある'],
+  ['決めたことは最後までやりきる','締め切りより早めに終わらせる'],
+  ['出かける前に戸締まりを何度も確認する','予想外のことが起きると慌ててしまう'],
+  ['新しいお店やメニューをつい試したくなる','人と違うアイデアを思いつくことが多い'],
+  ['大勢の場では聞き役になることが多い','自分から目立とうとはしない'],
+  ['困っている人を見ると放っておけない','相手が喜ぶかどうかをつい考える'],
+  ['忘れ物や遅刻をしてしまいがち','部屋や机が散らかりやすい'],
+  ['トラブルがあっても落ち着いて対応できる','気分の浮き沈みが少ない'],
+  ['アイデアを出すのは苦手','いつも同じお店・同じメニューを選ぶ']
+];
+const TIPI_SCALE = ['全く違うと思う','おおよそ違うと思う','少し違うと思う','どちらでもない','少しそう思う','まあまあそう思う','強くそう思う'];
+const TIPI_ITEMS = [
+  '活発で，外向的だと思う',
+  '他人に不満をもち，もめごとを起こしやすいと思う',
+  'しっかりしていて，自分に厳しいと思う',
+  '心配性で，うろたえやすいと思う',
+  '新しいことが好きで，変わった考えをもつと思う',
+  'ひかえめで，おとなしいと思う',
+  '人に気をつかう，やさしい人間だと思う',
+  'だらしなく，うっかりしていると思う',
+  '冷静で，気分が安定していると思う',
+  '発想力に欠けた，平凡な人間だと思う'
+];
+// 各特性 = (正項目 + (8 − 逆転項目)) / 2   … 1.0〜7.0
+const TRAITS = {
+  E:{name:'外向性',   pos:1, rev:6,  hi:'人と関わることでエネルギーが湧き、活発に動く傾向', lo:'落ち着いた環境や一人の時間を好み、じっくり考える傾向'},
+  A:{name:'協調性',   pos:7, rev:2,  hi:'相手の気持ちを思いやり、争いを避けて協力する傾向', lo:'自分の意見をはっきり持ち、率直に伝える傾向'},
+  C:{name:'勤勉性',   pos:3, rev:8,  hi:'計画的で、目標に向けてきちんと取り組む傾向', lo:'柔軟でおおらか、その場に合わせて動く傾向'},
+  N:{name:'神経症傾向', label:'情緒の敏感さ（神経症傾向）', pos:4, rev:9, hi:'感受性が豊かで、心配ごとやストレスに気づきやすい傾向', lo:'気持ちが安定していて、動じにくい傾向'},
+  O:{name:'開放性',   pos:5, rev:10, hi:'好奇心が強く、新しい考えや体験を楽しむ傾向', lo:'慣れたやり方を大切にし、現実的に考える傾向'}
+};
+const ORDER = ['E','A','C','N','O'];
+
+/* 会話のヒント（分析ではなく、話題の提案） */
+const TRAIT_TALK = {
+  E:{hi:['最近、誰かと過ごしていちばん楽しかった時間は？'], lo:['ほっとできるお気に入りの過ごし方は？']},
+  A:{hi:['誰かにしてもらって、うれしかったことは？'], lo:['これだけは譲れない、というこだわりは？']},
+  C:{hi:['今、目標にしていることは？'], lo:['予定外の出来事が、かえって良かった経験は？']},
+  N:{hi:['気持ちが疲れたとき、どうやって回復していますか？'], lo:['落ち着いていられる秘訣は何だと思いますか？']},
+  O:{hi:['最近「これ面白い！」と思ったことは？'], lo:['長く続けている好きなことは？']}
+};
+
+/* ---------- 性格の活かし方（特性の高低ごと） ---------- */
+const USES = {
+  E:{hi:{title:'人を巻き込む力', str:['話しかけ上手','場を明るくする','行動が早い'], roles:['接客・営業','イベント運営','まとめ役'],
+        tip:'人と会う予定を**「充電」として入れる**。アイデアは**話しながら形にする**と進みやすい', care:'予定の詰めすぎに注意。**何もしない日**もつくろう'},
+     lo:{title:'じっくり深める力', str:['集中力','聞き上手','深い信頼関係'], roles:['研究・企画','ものづくり','専門職'],
+        tip:'**一人で考える時間を先に確保**する。大人数より**1対1の場**で力が出やすい', care:'考えをしまい込みがち。信頼できる人には**言葉にして伝えて**みよう'}},
+  A:{hi:{title:'人を支える力', str:['気持ちに気づく','協力をつくる','信頼される'], roles:['医療・福祉','教育','サポート・調整役'],
+        tip:'**「ありがとう」が集まる場所**で働くと、やりがいを感じやすい', care:'抱え込みに注意。**「今は難しい」と言う練習**を'},
+     lo:{title:'率直に伝える力', str:['はっきり言える','流されない','交渉に強い'], roles:['交渉・経営','品質チェック','リーダー'],
+        tip:'意見を言う場面で頼られる存在に。**結論の前に相手への配慮をひとこと**添えると伝わる', care:'正しくても**言い方で誤解**されることも。言葉選びを少しだけ意識'}},
+  C:{hi:{title:'やり遂げる力', str:['最後までやる','約束を守る','計画上手'], roles:['管理・事務','エンジニア','資格職'],
+        tip:'目標を**小さく区切ってチェックリスト化**。勤勉性は**多くの仕事の成果と関係する**と報告されています', care:'完璧主義に注意。**「8割で合格」**の日もつくろう'},
+     lo:{title:'臨機応変に動く力', str:['変化に強い','こだわらない','ひらめき'], roles:['クリエイティブ','現場対応','企画の立ち上げ'],
+        tip:'**締め切りや仲間など「外の仕組み」**を使うと、ひらめきが形になる', care:'うっかり防止に**リマインダーとメモ**を味方に'}},
+  N:{hi:{title:'気づく力・感じ取る力', str:['問題に早く気づく','人の痛みに共感','準備が丁寧'], roles:['リスク管理','チェック業務','芸術・表現'],
+        tip:'不安は**「早めの準備」に変える**と強みになる。心配ごとは**紙に書き出す**だけでも軽くなる', care:'ストレスをためやすい。**睡眠・運動・人に話す**を大切に'},
+     lo:{title:'動じない力', str:['プレッシャーに強い','冷静な判断','周りを安心させる'], roles:['緊急対応','リーダー','人前に立つ仕事'],
+        tip:'**トラブルのときこそ頼られる**存在に。不安そうな人に**声をかける**と喜ばれる', care:'他人の不安に気づきにくいことも。**相手の気持ちを一度たずねて**みよう'}},
+  O:{hi:{title:'新しいものを生み出す力', str:['発想が豊か','学ぶのが好き','違いを受け入れる'], roles:['企画・デザイン','研究','起業・国際'],
+        tip:'**本・旅・知らない人との会話**など、新しい刺激を定期的に入れるとエネルギーが湧く', care:'興味が移りやすい。**一つは「続けること」を決めて**おこう'},
+     lo:{title:'確かなものを守る力', str:['現実的','ぶれない','着実に続ける'], roles:['運用・経理','職人','組織を支える仕事'],
+        tip:'得意なやり方を**磨き続ける**と、誰にもまねできない**安定感と信頼**になる', care:'新しいことは否定せず、**「小さく一回だけ試す」**のがおすすめ'}}
+};
+const hl = t => esc(t).replace(/\*\*(.+?)\*\*/g,'<strong class="hl">$1</strong>');
+
+/* ---------- 似ているアニメキャラ（お楽しみ：科学的根拠なし） ----------
+   作品での描かれ方から作者が大まかに付けた5特性のイメージ値（1〜7）
+   並び：外向性E・協調性A・勤勉性C・神経症傾向N・開放性O                 */
+const CHARAS = [
+  {n:'モンキー・D・ルフィ', w:'ONE PIECE', ic:'🍖', p:[7,5,1.5,1.5,6.5], why:'仲間思いで自由、とにかく前向き'},
+  {n:'ロロノア・ゾロ', w:'ONE PIECE', ic:'⚔️', p:[2.5,3,5.5,1.5,2.5], why:'口数は少ないが、目標にまっすぐで動じない'},
+  {n:'ナミ', w:'ONE PIECE', ic:'🍊', p:[5,3.5,5.5,4.5,4], why:'しっかり者で現実的、仲間のために計算できる'},
+  {n:'孫悟空', w:'ドラゴンボール', ic:'🥋', p:[6,5,3,1,6], why:'強い相手にワクワクする、こだわらない自由人'},
+  {n:'ベジータ', w:'ドラゴンボール', ic:'💪', p:[4,1.5,6,5,3], why:'プライドが高く、努力を惜しまない'},
+  {n:'竈門炭治郎', w:'鬼滅の刃', ic:'🔥', p:[5,7,6,3.5,4.5], why:'やさしく誠実で、努力を積み重ねる'},
+  {n:'我妻善逸', w:'鬼滅の刃', ic:'⚡', p:[5,5,2,7,3.5], why:'怖がりで感情豊か、いざというとき強い'},
+  {n:'冨岡義勇', w:'鬼滅の刃', ic:'🌊', p:[1.5,4,6,3,2.5], why:'無口で不器用、でも責任感は人一倍'},
+  {n:'うずまきナルト', w:'NARUTO', ic:'🍥', p:[7,5.5,2.5,3.5,5], why:'あきらめない、人の心を動かすムードメーカー'},
+  {n:'江戸川コナン', w:'名探偵コナン', ic:'🔍', p:[4,4.5,6,2,6.5], why:'好奇心と推理力、冷静に真実を追う'},
+  {n:'ドラえもん', w:'ドラえもん', ic:'🔔', p:[5.5,6,3,5,5], why:'面倒見がよく、ちょっと心配性'},
+  {n:'野比のび太', w:'ドラえもん', ic:'👓', p:[3.5,6.5,1.5,6,4.5], why:'やさしくて人の痛みが分かる、のんびり屋'},
+  {n:'野原しんのすけ', w:'クレヨンしんちゃん', ic:'🍑', p:[7,4.5,1,1,7], why:'マイペースで自由奔放、どこでも楽しめる'},
+  {n:'虎杖悠仁', w:'呪術廻戦', ic:'👊', p:[6,6.5,4,2.5,5], why:'明るく人のために動ける、まっすぐな性格'},
+  {n:'五条悟', w:'呪術廻戦', ic:'🕶️', p:[6.5,2.5,3,1,6], why:'自信家で型破り、余裕たっぷり'},
+  {n:'ロイド・フォージャー', w:'SPY×FAMILY', ic:'🕵️', p:[4,4.5,7,3,5], why:'完璧主義で計画的、家族のために奮闘'},
+  {n:'ヨル・フォージャー', w:'SPY×FAMILY', ic:'🌹', p:[3,6.5,4.5,5,3.5], why:'ひかえめでやさしく、少し天然'},
+  {n:'アーニャ・フォージャー', w:'SPY×FAMILY', ic:'🥜', p:[6,5,1.5,4,6.5], why:'好奇心いっぱいで、ノリと勢いで動く'},
+  {n:'リヴァイ', w:'進撃の巨人', ic:'🧹', p:[2,3.5,7,2,3], why:'冷静で几帳面、仲間を大切にする'},
+  {n:'坂田銀時', w:'銀魂', ic:'🍬', p:[4,5,1,2,5.5], why:'やる気はないようで、大事なときは熱い'},
+  {n:'フリーレン', w:'葬送のフリーレン', ic:'🪄', p:[1.5,4,3.5,1.5,6], why:'マイペースで淡々、魔法への探究心が強い'},
+  {n:'碇シンジ', w:'新世紀エヴァンゲリオン', ic:'🎧', p:[1.5,5,3.5,7,3], why:'繊細で人の気持ちに敏感、悩みながら進む'},
+  {n:'L', w:'DEATH NOTE', ic:'🍰', p:[1.5,2.5,5,3,7], why:'独特の発想と集中力、我が道を行く天才'},
+  {n:'キキ', w:'魔女の宅急便', ic:'🧹', p:[5,6,5,5,6], why:'前向きにがんばり、悩みながら成長する'}
+];
+
+/* ---------- 似ている世界史の人物（お楽しみ：科学的根拠なし） ----------
+   伝記などで知られる人物像から作成者が大まかに付けたイメージ値（1〜7）  */
+const HISTORY = [
+  {n:'ナポレオン', w:'フランス皇帝（1769–1821）', ic:'🎖️', p:[6,2,6,4,6], why:'大きな夢と行動力で時代を動かした'},
+  {n:'レオナルド・ダ・ヴィンチ', w:'芸術家・発明家（1452–1519）', ic:'🎨', p:[4,4.5,2,3,7], why:'好奇心のかたまり。興味が次々に広がる'},
+  {n:'アインシュタイン', w:'物理学者（1879–1955）', ic:'💡', p:[3.5,4.5,3,3,7], why:'常識にとらわれない自由な発想'},
+  {n:'ナイチンゲール', w:'看護師（1820–1910）', ic:'🏥', p:[5,6,7,4,5], why:'人を助けたい思いと、粘り強い実行力'},
+  {n:'エジソン', w:'発明家（1847–1931）', ic:'💡', p:[5,3,7,3,6.5], why:'失敗してもあきらめない努力の人'},
+  {n:'キュリー夫人', w:'科学者（1867–1934）', ic:'🔬', p:[2,4.5,7,4,6], why:'静かに、地道に研究を積み重ねた'},
+  {n:'ガンジー', w:'インド独立の指導者（1869–1948）', ic:'🕊️', p:[4,6.5,6,2,5], why:'非暴力を貫いた、ぶれない信念'},
+  {n:'リンカーン', w:'アメリカ大統領（1809–1865）', ic:'🎩', p:[4.5,6,6,5.5,5], why:'誠実でやさしく、悩みながらも前へ'},
+  {n:'クレオパトラ', w:'エジプトの女王（前69–前30）', ic:'👸', p:[7,3.5,5,3.5,6], why:'人を引きつける話術と知性'},
+  {n:'チンギス・ハン', w:'モンゴル帝国の創始者（1162頃–1227）', ic:'🐎', p:[6,2.5,6,2,4], why:'動じない決断力と統率力'},
+  {n:'ベートーヴェン', w:'作曲家（1770–1827）', ic:'🎹', p:[3,2.5,5,6.5,6.5], why:'情熱的でこだわりが強い'},
+  {n:'モーツァルト', w:'作曲家（1756–1791）', ic:'🎼', p:[7,4.5,2,4,7], why:'陽気で自由な天才肌'},
+  {n:'ゴッホ', w:'画家（1853–1890）', ic:'🌻', p:[2,4,3,7,7], why:'繊細で、感じたことを全力で表現'},
+  {n:'孔子', w:'思想家（前552頃–前479）', ic:'📜', p:[4,6,6.5,2,3], why:'礼儀と学びを大切にした'},
+  {n:'ジャンヌ・ダルク', w:'フランスの英雄（1412頃–1431）', ic:'⚔️', p:[6,5,6,3,4], why:'信じた道へまっすぐ進む勇気'},
+  {n:'ソクラテス', w:'哲学者（前470頃–前399）', ic:'🏛️', p:[6,4,3,1.5,7], why:'人と語り合い、問い続けた'},
+  {n:'ベンジャミン・フランクリン', w:'政治家・発明家（1706–1790）', ic:'⚡', p:[6.5,5.5,6,2,7], why:'社交的で好奇心旺盛、計画上手'},
+  {n:'エリザベス1世', w:'イングランド女王（1533–1603）', ic:'👑', p:[5.5,3.5,6,4,5], why:'慎重さと強さをあわせ持つリーダー'}
+];
+const KEYS5 = ['E','A','C','N','O'];
+function matchCharas(s, list=CHARAS){
+  const use = KEYS5.filter(k=>s[k]!==null);
+  if (use.length<3) return [];
+  const maxD = Math.sqrt(use.length*36);
+  return list.map(c=>{
+    const d = Math.sqrt(use.reduce((a,k)=>a+Math.pow(s[k]-c.p[KEYS5.indexOf(k)],2),0));
+    const common = use.filter(k=>{ const v=c.p[KEYS5.indexOf(k)]; return (s[k]>=4.5&&v>=4.5)||(s[k]<=3.5&&v<=3.5); });
+    return {...c, pct:Math.round((1-d/maxD)*100), common};
+  }).sort((a,b)=>b.pct-a.pct).slice(0,3);
+}
+
+/* ---------- 質問の流れ ---------- */
+const QUESTIONS = [
+ {id:'breakfast', kind:'warm', type:'single', title:'朝食は何を食べることが多い？', hint:'ウォーミングアップです（性格の判定には使いません）', opts:[
+   {t:'パン派',e:'🍞'},{t:'ご飯派',e:'🍚'},{t:'その他（果物・ヨーグルト・シリアルなど）',e:'🍎'},{t:'朝食は食べない',e:'☕'}]},
+ ...TIPI_ITEMS.map((t,i)=>({id:'tipi'+(i+1), kind:'tipi', no:i+1, type:'scale', title:t})),
+ {id:'interest', kind:'self', type:'multi', title:'最近、よく時間を使っていることは？', hint:'いくつでも', opts:[
+   {t:'音楽・映画・エンタメ',e:'🎵',tag:'音楽・エンタメ'},{t:'スポーツ・運動',e:'⚽',tag:'スポーツ・運動'},
+   {t:'ゲーム・アニメ・マンガ',e:'🎮',tag:'ゲーム・アニメ'},{t:'旅行・おでかけ',e:'✈️',tag:'旅行・おでかけ'},
+   {t:'料理・カフェ・グルメ',e:'🍳',tag:'食・グルメ'},{t:'勉強・読書・資格',e:'📚',tag:'学び・読書'},
+   {t:'仕事・副業',e:'💼',tag:'仕事'},{t:'家族・子育て',e:'🏡',tag:'家族'},
+   {t:'特にない・答えたくない',e:'🙆',none:true}]},
+ {id:'concern', kind:'self', type:'multi', title:'最近、少し気になるテーマは？', hint:'いくつでも。言いたくなければ「答えたくない」でOK', opts:[
+   {t:'仕事・学校のこと',e:'💼',talk:'仕事・学校'},{t:'お金や将来のこと',e:'🌱',talk:'お金・将来'},
+   {t:'人間関係',e:'👥',talk:'人間関係'},{t:'家族のこと',e:'🏠',talk:'家族'},
+   {t:'健康や体調',e:'💪',talk:'健康'},{t:'生き方・心のこと',e:'🧭',talk:'生き方・心'},
+   {t:'特にない',e:'🙆',none:true},{t:'答えたくない',e:'🤐',none:true,quiet:true}]},
+ {id:'wanttalk', kind:'self', type:'multi', title:'結果を見たあと、話してみたいことは？', hint:'いくつでも。選んだテーマだけでお話しします', opts:[
+   {t:'趣味や好きなこと',e:'🎈',want:'趣味・好きなこと'},{t:'仕事や将来のこと',e:'🚀',want:'仕事・将来'},
+   {t:'人間関係のこと',e:'🤝',want:'人間関係'},{t:'生き方や幸せについて',e:'🌈',want:'生き方・幸せ'},
+   {t:'信仰や心の支えについて',e:'🕯️',want:'信仰・心の支え'},{t:'今日は結果を見るだけでいい',e:'👀',none:true}]}
+];
+
+const CONCERN_TALK = {
+  '仕事・学校':'仕事や学校のことで、最近どんな場面が気になっていますか？',
+  'お金・将来':'将来について、こうなったらいいなと思うことはありますか？',
+  '人間関係':'人との関わりで、うれしかったこと・難しいと感じることは？',
+  '家族':'ご家族のことで、最近気にかけていることはありますか？',
+  '健康':'体調や生活のリズムで、気をつけていることはありますか？',
+  '生き方・心':'「自分らしく生きる」って、どんなことだと思いますか？'
+};
+const WANT_TALK = {
+  '趣味・好きなこと':'時間を忘れて夢中になれることは何ですか？',
+  '仕事・将来':'5年後、どんな毎日を過ごしていたいですか？',
+  '人間関係':'一緒にいて安心できる人には、どんな共通点がありますか？',
+  '生き方・幸せ':'あなたにとって「幸せだな」と感じる瞬間は？',
+  '信仰・心の支え':'つらいときに支えになっているもの・ことはありますか？'
+};
+
+/* ---------- 状態（メモリ上のみ。保存しない） ---------- */
+let idx=0, answers={};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+if (ORG_NOTE) $('#orgNote').textContent = ORG_NOTE;
+
+/* ---------- ？ボタン：説明と共有 ---------- */
+// 共有するURL。GitHub Pagesで公開したら、そのURLを入れると確実です（null なら今開いているページのURL）
+const SHARE_URL = 'https://ssan07838-ops.github.io/kokoro-compass/';
+const shareUrl = () => SHARE_URL || (location.origin + location.pathname);
+const SHARE_TEXT = '3分で分かる性格テスト「こころのコンパス」。似ているアニメキャラや歴史上の人物も分かるよ！';
+let qrDone = false;
+const isPublic = () => !!SHARE_URL || /\.github\.io$/.test(location.hostname);
+$('#helpBtn').onclick = () => {
+  const url = shareUrl();
+  if (!isPublic()){
+    $('#qrBox').innerHTML = '<span class="small" style="padding:20px 6px;text-align:center">QRコードは、アプリを一般公開したあとに表示されます。</span>';
+    $('#shareUrl').textContent = '';
+    document.querySelector('.share-row').classList.add('hidden');
+    $('#helpModal').classList.remove('hidden');
+    return;
+  }
+  document.querySelector('.share-row').classList.remove('hidden');
+  $('#shareUrl').textContent = url;
+  $('#lineBtn').href = 'https://line.me/R/share?text=' + encodeURIComponent(SHARE_TEXT + '\n' + url);
+  if (!qrDone){
+    try { $('#qrBox').innerHTML = QRLite(url); qrDone = true; }
+    catch(e){ $('#qrBox').innerHTML = '<span class="small">QRコードを表示できませんでした。リンクをコピーして送ってください。</span>'; }
+  }
+  if (navigator.share) $('#nativeShare').classList.remove('hidden');
+  $('#helpModal').classList.remove('hidden');
+};
+$('#helpClose').onclick = () => $('#helpModal').classList.add('hidden');
+$('#helpModal').onclick = e => { if (e.target.id==='helpModal') $('#helpModal').classList.add('hidden'); };
+$('#copyBtn').onclick = async () => {
+  const b = $('#copyBtn');
+  try { await navigator.clipboard.writeText(shareUrl()); b.textContent = '✓ コピーしました'; }
+  catch(e){ b.textContent = '上のURLを長押しでコピー'; }
+  setTimeout(()=>b.textContent='🔗 リンクをコピー', 2500);
+};
+$('#nativeShare').onclick = async () => { try { await navigator.share({title:'こころのコンパス', text:SHARE_TEXT, url:shareUrl()}); } catch(e){} };
+
+
+function show(id){ ['intro','quiz','result'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id)); window.scrollTo(0,0); }
+$('#startBtn').onclick=()=>{ idx=0; answers={}; show('quiz'); renderQ(); };
+$('#backBtn').onclick=()=>{ if(idx===0) show('intro'); else { idx--; renderQ(); } };
+
+function renderQ(){
+  const q=QUESTIONS[idx], total=QUESTIONS.length;
+  $('#barFill').style.width=(idx/total*100)+'%';
+  $('#count').textContent=(idx+1)+' / '+total;
+  const cur = answers[q.id] ?? (q.type==='multi'?[]:null);
+  let h='';
+  if (q.kind==='tipi'){
+    h += `<div class="qnum">性格テスト ${q.no} / 10</div><div class="stem">${TIPI_STEM}</div><h2 class="qtitle">${esc(q.title)}</h2>
+          <div class="ex"><b>たとえば、こんな人</b><ul>${TIPI_EX[q.no-1].map(x=>`<li>${x}</li>`).join('')}</ul></div>
+          <div class="qhint">自分にどのくらい当てはまるか、1つ選んでください</div><div class="opts">`;
+    TIPI_SCALE.forEach((t,i)=>{ h+=`<button class="opt${cur===i+1?' on':''}" data-v="${i+1}"><span class="no">${i+1}</span><span>${t}</span></button>`; });
+    h += `</div><button class="opt quiet next" id="skipBtn">答えたくない</button>`;
+  } else {
+    h += `<div class="qnum">${q.kind==='warm'?'ウォーミングアップ':'あなたについて'}</div><h2 class="qtitle">${esc(q.title)}</h2>
+          <div class="qhint">${esc(q.hint||'')}</div><div class="opts">`;
+    q.opts.forEach((o,i)=>{
+      const on = q.type==='multi' ? cur.includes(i) : cur===i;
+      h += `<button class="opt${on?' on':''}${o.quiet?' quiet':''}" data-i="${i}"><span class="em">${o.e||''}</span><span>${esc(o.t)}</span></button>`;
+    });
+    h += `</div>`;
+    if (q.type==='multi') h += `<button class="btn next" id="nextBtn" ${cur.length?'':'disabled'}>${idx===total-1?'結果を見る':'次へ'}</button>`;
+    else h += `<button class="opt quiet next" id="skipBtn">とばす</button>`;
+  }
+  const card=$('#qcard'); card.innerHTML=h;
+  card.classList.remove('fade'); void card.offsetWidth; card.classList.add('fade');
+
+  card.querySelectorAll('.opt[data-v]').forEach(b=>b.onclick=()=>{ answers[q.id]=+b.dataset.v; b.classList.add('on'); setTimeout(advance,180); });
+  card.querySelectorAll('.opt[data-i]').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.i;
+    if (q.type==='single'){ answers[q.id]=i; b.classList.add('on'); setTimeout(advance,180); return; }
+    let a = answers[q.id] ? [...answers[q.id]] : [];
+    if (q.opts[i].none) a = a.includes(i) ? [] : [i];
+    else { a=a.filter(x=>!q.opts[x].none); a = a.includes(i) ? a.filter(x=>x!==i) : [...a,i]; }
+    answers[q.id]=a; renderQ();
+  });
+  const nb=$('#nextBtn'); if(nb) nb.onclick=advance;
+  const sb=$('#skipBtn'); if(sb) sb.onclick=()=>{ delete answers[q.id]; advance(); };
+}
+function advance(){ if(idx<QUESTIONS.length-1){ idx++; renderQ(); } else renderResult(); }
+
+/* ---------- 採点（TIPI-J 原版どおり） ---------- */
+function scoreTIPI(){
+  const s={};
+  ORDER.forEach(k=>{
+    const t=TRAITS[k], p=answers['tipi'+t.pos], r=answers['tipi'+t.rev];
+    s[k] = (p&&r) ? (p + (8-r))/2 : null;
+  });
+  return s;
+}
+// 尺度の中点(4)からの位置で表現。※他の人との比較ではない
+function level(v){ return v>=5.5?'高め':v>=4.5?'やや高め':v>3.5?'中くらい':v>2.5?'やや低め':'低め'; }
+
+function renderResult(){
+  const s=scoreTIPI();
+  const valid=ORDER.filter(k=>s[k]!==null);
+  const self = id => (answers[id]||[]).map(i=>QUESTIONS.find(q=>q.id===id).opts[i]);
+  const tags=self('interest').filter(o=>o.tag).map(o=>o.tag);
+  const concerns=self('concern').filter(o=>o.talk).map(o=>o.talk);
+  const wants=self('wanttalk').filter(o=>o.want).map(o=>o.want);
+  const box=$('#result'); let h='';
+
+  // 1. 最も特徴的な特性（中点からの距離が大きいもの）
+  const dev = valid.map(k=>({k,d:Math.abs(s[k]-4)})).sort((a,b)=>b.d-a.d);
+  h += `<div class="card rtype fade"><div class="lbl">あなたのいちばんの特徴</div>`;
+  if (!dev.length || dev[0].d<1){
+    h += `<div style="font-size:40px;margin-top:6px">⚖️</div><h2>バランス型</h2>
+          <p>5つの特性がどれも中くらいで、極端な偏りがありませんでした。場面に応じて、いろいろな面を使い分けられるタイプといえます。</p>`;
+  } else {
+    const top=dev.filter(x=>x.d>=1).slice(0,2);
+    const phrase=x=>`${TRAITS[x.k].name}が${s[x.k]>4?'高め':'低め'}`;
+    h += `<div style="font-size:40px;margin-top:6px">🧭</div><h2>${top.map(phrase).join('・')}</h2>
+          <p>${top.map(x=>(s[x.k]>4?TRAITS[x.k].hi:TRAITS[x.k].lo)+'があります。').join('<br>')}</p>`;
+  }
+  h += `</div>`;
+
+  // 2. グラフ
+  h += `<div class="card sec"><h3><span class="n"></span>ビッグファイブ（5つの特性）</h3>
+        <div class="scale"><span>1</span><span>4（中点）</span><span>7</span></div>`;
+  ORDER.forEach(k=>{
+    const t=TRAITS[k], v=s[k];
+    if (v===null){ h+=`<div class="trait"><div class="row"><span>${t.label||t.name}</span><small>未回答のため算出なし</small></div></div>`; return; }
+    h += `<div class="trait"><div class="row"><span>${t.label||t.name}</span><span><b>${v.toFixed(1)}</b> <small>${level(v)}</small></span></div>
+      <div class="track"><div class="fill" data-w="${(v-1)/6*100}" style="background:var(--${k})"></div><i class="mid"></i></div>
+      <div class="why">${esc(v>4?t.hi:v<4?t.lo:'どちらの傾向も同じくらい')}</div></div>`;
+  });
+  h += `<div class="box">「高い・低い」に良い悪いはありません。どの特性にも、それぞれの強みがあります。<br>
+        点数は1〜7で、真ん中の4から見た位置を表しています（他の人との比較ではありません）。</div></div>`;
+
+  // 活かし方
+  const tipKeys = dev.length ? (dev.filter(x=>x.d>=0.5).length ? dev.filter(x=>x.d>=0.5) : dev).map(x=>x.k) : [];
+  if (tipKeys.length){
+    const tipHtml = k => { const u=USES[k][s[k]>=4?'hi':'lo'];
+      return `<div class="tip" style="--c:var(--${k})">
+        <div class="tip-head"><span class="tip-trait">${TRAITS[k].name}が${s[k]>=4?'高め':'低め'}</span><div class="tip-title">「${u.title}」</div></div>
+        <div class="tip-row"><span class="tip-ic">💪</span><div><div class="tip-lbl">あなたの強み</div>${u.str.map(x=>`<span class="kw">${x}</span>`).join('')}</div></div>
+        <div class="tip-row"><span class="tip-ic">💼</span><div><div class="tip-lbl">力を発揮しやすい場</div>${u.roles.map(x=>`<span class="role">${x}</span>`).join('')}</div></div>
+        <div class="tip-row"><span class="tip-ic">✅</span><div><div class="tip-lbl">活かすコツ</div>${hl(u.tip)}</div></div>
+        <div class="tip-care"><span class="tip-ic">⚠️</span><div><div class="tip-lbl">気をつけたいこと</div>${hl(u.care)}</div></div>
+      </div>`; };
+    h += `<div class="card sec"><h3><span class="n"></span>性格の活かし方</h3>`;
+    h += tipKeys.slice(0,2).map(tipHtml).join('');
+    if (tipKeys.length>2) h += `<details><summary>ほかの特性の活かし方も見る</summary>${tipKeys.slice(2).map(tipHtml).join('')}</details>`;
+    h += `<div class="small" style="margin-top:8px">性格と仕事・生活の関係についての一般的な傾向をもとにしたヒントです。向き不向きを決めつけるものではありません。</div></div>`;
+  }
+
+  // 似ている人物・キャラ（お楽しみ）
+  const groups = [
+    {id:'anime', label:'🎬 アニメキャラ', list:matchCharas(s, CHARAS)},
+    {id:'hist',  label:'📜 世界史の人物', list:matchCharas(s, HISTORY)}
+  ].filter(g=>g.list.length);
+  if (groups.length){
+        h += `<div class="card sec"><h3><span class="n"></span>似ている人物・キャラ<span class="fun">お楽しみ</span></h3>
+      <div class="tabs">${groups.map((g,i)=>`<button class="tabbtn${i===0?' on':''}" data-g="${g.id}">${g.label}</button>`).join('')}</div>`;
+    groups.forEach((g,gi)=>{
+      h += `<div class="tabpane${gi===0?'':' hidden'}" data-g="${g.id}">`;
+      g.list.forEach((c,i)=>{
+        h += `<div class="chara${i===0?' best':''}"><div class="ic">${c.ic}</div><div><div class="nm">${i===0?'🥇 ':''}${esc(c.n)}</div>
+          <div class="wk">${esc(c.w)}｜${esc(c.why)}</div>
+          ${c.common.length?`<div class="wk">共通点：${c.common.map(k=>TRAITS[k].name+(s[k]>=4.5?'が高め':'が低め')).join('・')}</div>`:''}</div>
+          <div class="pct">${c.pct}%</div></div>`;
+      });
+      h += `<div class="box">💬 ${esc(g.list[0].n)}、知っていますか？ どこが似ていると思いますか？</div></div>`;
+    });
+    h += `<div class="small" style="margin-top:8px">キャラや人物の性格の数値は、作品や伝記での描かれ方から作成者がつけたイメージで、科学的な根拠はありません。上の性格判定とは別の、話のネタとして楽しんでください。</div></div>`;
+  }
+
+  // 3. 根拠（採点の内訳）
+  h += `<div class="card sec"><h3><span class="n"></span>採点の内訳</h3><ul class="ev">`;
+  ORDER.forEach(k=>{
+    const t=TRAITS[k], p=answers['tipi'+t.pos], r=answers['tipi'+t.rev];
+    h += `<li><b style="color:var(--${k})">${t.name}</b>：Q${t.pos}「${esc(TIPI_ITEMS[t.pos-1])}」→ ${p??'−'}　／　Q${t.rev}「${esc(TIPI_ITEMS[t.rev-1])}」→ ${r??'−'}（逆転：${r?8-r:'−'}）<br>
+          <span class="small">（${p??'−'} ＋ ${r?8-r:'−'}）÷ 2 ＝ ${s[k]!==null?s[k].toFixed(1):'−'}</span></li>`;
+  });
+  h += `</ul><div class="small" style="margin-top:6px">各特性は、反対の意味の2問を組み合わせて測っています。</div></div>`;
+
+  // 4. 興味関心（本人の回答）
+  h += `<div class="card sec"><h3><span class="n"></span>興味関心</h3>`;
+  h += tags.length ? tags.map(v=>`<span class="tag">${esc(v)}</span>`).join('') : `<div class="muted">特に選ばれていません。</div>`;
+  h += `</div>`;
+
+  // 5. 気がかり（本人が選んだものだけ）
+  h += `<div class="card sec"><h3><span class="n"></span>あなたが選んだ「気になるテーマ」</h3>`;
+  h += concerns.length ? concerns.map(v=>`<span class="tag warm">${esc(v)}</span>`).join('') +
+       `<div class="small" style="margin-top:6px">あなたが自分で選んだものだけを表示しています。話すかどうかは自由です。</div>`
+       : `<div class="muted">選ばれていません。もちろん、それで大丈夫です。</div>`;
+  h += `</div>`;
+
+  // 6. 会話のきっかけ
+  const talks=[];
+  dev.filter(x=>x.d>=1).slice(0,2).forEach(x=>talks.push(...TRAIT_TALK[x.k][s[x.k]>4?'hi':'lo']));
+  wants.forEach(w=>WANT_TALK[w]&&talks.push(WANT_TALK[w]));
+  concerns.slice(0,2).forEach(c=>CONCERN_TALK[c]&&talks.push(CONCERN_TALK[c]));
+  if (!talks.length) talks.push('この結果を見て、当たっていると思うところ・違うと思うところは？');
+  h += `<div class="card sec"><h3><span class="n"></span>話してみたいこと・会話のきっかけ</h3>`;
+  if (wants.length) h += `<div style="margin-bottom:8px">${wants.map(v=>`<span class="tag">${esc(v)}</span>`).join('')}</div>`;
+  h += `<ol class="talk">${[...new Set(talks)].slice(0,5).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`;
+  if (wants.includes('信仰・心の支え')) h += `<div class="box">🕯️「信仰や心の支え」を選んでくださったので、よければ信仰についての体験談もお話しできます。聞くだけ・途中でやめるのも自由です。</div>`;
+  const wt=answers.wanttalk; if (wt && wt.length===1 && QUESTIONS.at(-1).opts[wt[0]].none) h += `<div class="box">今日は結果を見るだけでOKです。参加してくださってありがとうございました！</div>`;
+  h += `</div>`;
+
+  // 7. 納得度（結果のあとにだけ聞く）
+  h += `<div class="card sec"><h3><span class="n"></span>この結果、どのくらい当てはまりますか？</h3>
+    <div class="rate" id="rate">${[['😕','あまり'],['🤔','少し'],['🙂','まあまあ'],['😊','かなり'],['🤩','すごく']].map((x,i)=>`<button data-v="${i+1}"><b>${x[0]}</b>${x[1]}</button>`).join('')}</div>
+    <div id="rateMore" class="hidden"><div class="small" style="margin-top:12px">しっくりきた特性は？（いくつでも）</div>
+    <div class="chips" id="parts">${ORDER.map(k=>`<button>${TRAITS[k].name}</button>`).join('')}<button>どれも違う</button></div>
+    <div class="box" id="rateMsg"></div></div></div>`;
+
+  // 8. 回答一覧
+  h += `<div class="card"><details><summary>自分の回答を確認する</summary><ul class="alist">`;
+  QUESTIONS.forEach(q=>{
+    const a=answers[q.id]; let txt='（とばしました）';
+    if (q.type==='scale' && a) txt=a+'：'+TIPI_SCALE[a-1];
+    if (q.type==='single' && a!=null) txt=q.opts[a].t;
+    if (q.type==='multi' && a && a.length) txt=a.map(x=>q.opts[x].t).join('、');
+    h += `<li><b>${q.kind==='tipi'?'性格テスト'+q.no+'：':''}${esc(q.title)}</b>${esc(txt)}</li>`;
+  });
+  h += `</ul></details></div>`;
+
+  // 9. 出典
+  h += `<div class="card cite"><b>使用した尺度</b><br>
+    小塩真司・阿部晋吾・カトローニ ピノ (2012). 日本語版Ten Item Personality Inventory (TIPI-J) 作成の試み. パーソナリティ研究, 21, 40–52.
+    <a href="https://doi.org/10.2132/personality.21.40" target="_blank" rel="noopener">doi:10.2132/personality.21.40</a><br>
+    原版：Gosling, Rentfrow, & Swann (2003). 採点は各特性2項目の平均（逆転項目は8から引く）。<br>
+    ※10項目の短縮版のため、測定の精度には限りがあります。興味関心・気になるテーマ・話したいことは本人の回答をそのまま表示しており、分析ではありません。</div>`;
+
+  h += `<button class="btn ghost" id="againBtn">もう一度テストする</button>
+        <p class="small" style="text-align:center;margin-top:10px">この結果はどこにも保存されません。画面を閉じると消えます。</p>`;
+
+  box.innerHTML=h; show('result');
+  requestAnimationFrame(()=>setTimeout(()=>box.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%'),60));
+
+  box.querySelectorAll('#rate button').forEach(b=>b.onclick=()=>{
+    const r=+b.dataset.v; box.querySelectorAll('#rate button').forEach(x=>x.classList.toggle('on',x===b));
+    $('#rateMore').classList.remove('hidden');
+    $('#rateMsg').textContent = r>=4 ? 'ありがとうございます！どんなところが当たっていたか、ぜひ聞かせてください。'
+      : r===3 ? 'ありがとうございます。当たっているところ・違うところを一緒に見てみましょう。'
+      : '正直に教えてくださってありがとうございます。性格の判定は10問の簡易版なので、ずれることもあります。実際のあなたはどんな人か、ぜひ聞かせてください。';
+  });
+  box.querySelectorAll('.tabbtn').forEach(b=>b.onclick=()=>{
+    box.querySelectorAll('.tabbtn').forEach(x=>x.classList.toggle('on',x===b));
+    box.querySelectorAll('.tabpane').forEach(p=>p.classList.toggle('hidden',p.dataset.g!==b.dataset.g));
+  });
+  box.querySelectorAll('#parts button').forEach(b=>b.onclick=()=>b.classList.toggle('on'));
+  $('#againBtn').onclick=()=>{ idx=0; answers={}; show('intro'); };
+}
+</script>
+</body>
+</html>
